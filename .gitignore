@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.env*
+!.env.example
+*.tsbuildinfo
+coverage/
+.vercel/
+__pycache__/
+.venv/
+
+.pytest_cache/
+test-results/
+playwright-report/
+public/pdf.worker.min.mjs

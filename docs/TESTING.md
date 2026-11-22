@@ -41,12 +41,18 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Reference tests need an isolated Python environment with pytest. Run from `reference/civil-estimator-ai` so module imports resolve:
-
-```sh
-python -m pytest tests -q
-```
+The 13 prototype tests in the historical record were run before the Python source was removed. They are not part of the current Next.js test suite.
 
 ## Not verified externally
 
 No real Supabase credentials, OpenAI key/model, GitHub remote or Vercel project were configured. Microsoft Excel desktop opening/recalculation is also unverified. Use the live acceptance checklist in `DEPLOYMENT.md`; passing local checks does not replace it.
+
+## Historical Vercel services import verification
+
+After explicitly declaring the root Next.js `app` service, `npx vercel dev --local --listen 4176` detected only `app` and started successfully. HTTP checks through Vercel's router passed for `/`, `/login`, a generated `/_next/static/*` asset and `/pdf.worker.min.mjs` (200). The cron endpoint rejected missing authorisation (401). `/api/workspace` reached the application and returned its expected unconfigured-Supabase error (400); hosted authentication was not exercised.
+
+A clean `npm ci` reported zero known vulnerabilities. Lint, strict typecheck, all 40 tests and the production build passed. This was the earlier services configuration. It has since been replaced by standard Next.js configuration after removal of the Python prototype.
+
+## Next.js-only deployment verification — 22 November 2026
+
+Removed the archived Python application and switched to the standard root Next.js Vercel configuration. No service declarations, bindings or cron schedules are enabled by default. ESLint, strict TypeScript, all 40 current tests and the production build passed. `vercel dev --local --listen 3000` started the Next.js app without detecting a Python service; the home/setup page and PDF worker both returned HTTP 200. Supabase credentials and AI scheduling remain external setup requirements. No remote deployment was performed.

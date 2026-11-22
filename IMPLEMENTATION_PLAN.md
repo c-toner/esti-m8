@@ -9,7 +9,7 @@
 
 ## Baseline
 
-The original Python source remains under `reference/civil-estimator-ai/`. It implements session-only BOQ editing, approval-filtered totals, raster-pixel manual takeoff, SQLite rate CRUD/CSV, OpenAI extraction and Excel export. It has no authentication, organisation isolation or saved project/estimate database. All 13 original pure-Python tests pass.
+The original Python source was inspected during migration and subsequently removed from the repository at the user's request. The supplied ZIP and Git history preserve it. It implements session-only BOQ editing, approval-filtered totals, raster-pixel manual takeoff, SQLite rate CRUD/CSV, OpenAI extraction and Excel export. It has no authentication, organisation isolation or saved project/estimate database. All 13 original pure-Python tests pass.
 
 ## Decisions
 

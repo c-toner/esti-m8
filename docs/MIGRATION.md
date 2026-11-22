@@ -22,7 +22,7 @@ Overhead and contingency remain percentages of direct cost. Profit markup applie
 
 ## Transfer existing rates
 
-1. Run the reference app against your existing SQLite database using its original environment.
+1. If you still have legacy rates, extract the original supplied ZIP outside this repository and run that prototype against your existing SQLite database using its original environment.
 2. Export rates with **Export rate library CSV**.
 3. Open **Cost Library → Import CSV** in the new app.
 4. Required headers: `code,description,unit,rate`. Optional: `category,supplier,region,effective_date,source,notes,archived`.
@@ -35,4 +35,4 @@ There are no fabricated default market prices. The synthetic rates under `tests/
 
 The prototype did not persist projects, BOQs or takeoffs. Re-upload original documents into a new project, retain their drawing numbers/revisions, and recreate/calibrate takeoffs. Existing exported BOQ workbooks can be uploaded and analysed into draft suggestions, but this is not a lossless historical-estimate import. Independently verify quantities, approvals and rate provenance.
 
-Reference source files are preserved unchanged. Python caches created during baseline testing are excluded by `.gitignore`.
+The archived Python source was removed from the repository on 22 November 2026 at the user's request. The original supplied ZIP and earlier Git history preserve the baseline. Python is not required to install, test, build or deploy the migrated application.

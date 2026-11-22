@@ -4,6 +4,6 @@ import ts from "eslint-config-next/typescript";
 export default defineConfig([
   ...next,
   ...ts,
-  globalIgnores([".next/**", "reference/**", "public/pdf.worker.min.mjs"]),
+  globalIgnores([".next/**", "public/pdf.worker.min.mjs"]),
   { rules: { "react-hooks/set-state-in-effect": "off" } },
 ]);

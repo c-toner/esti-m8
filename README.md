@@ -2,7 +2,13 @@
 
 A Next.js application for Australian civil estimating: projects → private drawings → calibrated takeoffs / AI draft suggestions → reviewed BOQ → saved rates → Excel.
 
-The original Streamlit application is preserved under `reference/civil-estimator-ai/`. The deployed application uses PostgreSQL and Supabase Storage; it does not use Python, Streamlit or SQLite.
+The application runs entirely on Next.js and TypeScript, with Supabase for authentication, PostgreSQL and private file storage. The archived Python prototype has been removed from this repository.
+
+## Vercel deployment
+
+`vercel.json` uses Vercel's standard Next.js integration at the repository root. Pages, assets and API routes are handled by Next.js without service declarations, bindings or catch-all rewrites. Node.js is pinned to 26.x.
+
+The default configuration has no scheduled jobs and can be imported without a minute-level cron plan requirement. AI analysis still needs the authenticated worker to run regularly; configure Vercel cron on a suitable plan or an external scheduler using [the deployment guide](docs/DEPLOYMENT.md#ai-worker-scheduling). Until configured, AI jobs remain queued.
 
 ## Start locally
 

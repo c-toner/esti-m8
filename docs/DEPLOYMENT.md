@@ -57,14 +57,33 @@ The shell must have `CRON_SECRET` set; Next.js reads `.env.local` but your shell
 
 ## 4. GitHub and Vercel
 
-1. Create a private GitHub repository for this source and push the project, including `package-lock.json`, SQL migrations and `.github/workflows/checks.yml`. Exclude `.env.local`, `node_modules`, `.next` and test traces. No remote repository has been created or pushed as part of this implementation.
+1. Create a private GitHub repository for this source and push the project, including `package-lock.json`, SQL migrations and `.github/workflows/checks.yml`. Exclude `.env.local`, `node_modules`, `.next` and test traces. The current Git remote is `https://github.com/c-toner/esti-m8.git`; the current working branch is `master`.
 2. In Vercel choose **Add New → Project → Import Git Repository** and select it.
-3. Select the Next.js framework, repository root directory, install command `npm ci`, build command `npm run build`, and the default Next.js output directory.
+3. Set Root Directory to the repository root (`.`), Framework Preset to **Next.js**, and Production Branch to `master`. Commit and push the updated source before retrying import. `vercel.json` specifies `npm ci` and `npm run build`. Leave Output Directory at the Next.js default; do not override it with `out`, `dist` or `public`.
+   - The Python prototype has been removed. Do not configure a Python service or use the previously inferred multi-service import snippet.
+   - Next.js handles `/`, `/api/*` and `/_next/*` directly. No inter-service bindings or custom routing rewrites are needed.
+   - Supabase and OpenAI remain external services configured through the environment variables above.
 4. Use Node.js **26.x**, matching the locally verified runtime. Vercel currently supports it; see [Node.js versions](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions).
 5. Add all six environment variables to Production. Configure Preview separately with staging Supabase/OpenAI credentials. `NEXT_PUBLIC_` values are embedded at build time, so redeploy after changing them.
 6. Deploy. Set Supabase's production Site URL/allowlist to the final HTTPS origin. Test registration/login, a private upload and the acceptance workflow below.
-7. Verify the `/api/cron/analysis` cron registration and successful authenticated invocation in Vercel. `vercel.json` schedules once per minute. **This requires a Vercel plan supporting minute-level cron, currently Pro/Enterprise.** Hobby's daily-only cron rejects this configuration; use an appropriate plan or remove the cron declaration and arrange an authenticated external scheduler. See [cron plan limits](https://vercel.com/docs/cron-jobs/usage-and-pricing).
-8. Preview deployments need an explicitly configured staging scheduler or manual worker calls; do not assume production cron also runs on previews.
+7. Configure AI worker scheduling below before using automatic document analysis. The default deployment intentionally contains no cron schedule so the app itself can deploy on Hobby or Pro.
+8. Verify the live acceptance checklist. If an existing Vercel project still shows the old service layout, import the updated `master` commit with the root Next.js configuration rather than retrying the old deployment.
+
+### AI worker scheduling
+
+The worker remains a Next.js Node.js Route Handler at `/api/cron/analysis`; no Python process or separate service is needed. It starts or polls one persisted job per invocation. Without a scheduler, queued AI jobs do not advance automatically.
+
+For Vercel Pro/Enterprise, add this top-level field to `vercel.json` alongside `framework`, `installCommand` and `buildCommand`, then redeploy:
+
+```json
+"crons": [
+  { "path": "/api/cron/analysis", "schedule": "* * * * *" }
+]
+```
+
+Set `CRON_SECRET` in Vercel; Vercel sends it as a Bearer token for cron invocations. Verify successful calls in logs. Hobby rejects this minute-level schedule, so keep it absent on Hobby and use an external scheduler to call the same HTTPS endpoint every minute with `Authorization: Bearer <CRON_SECRET>`. A daily schedule is not a suitable replacement because jobs require repeated polling and expire after 24 hours. See [Vercel cron limits](https://vercel.com/docs/cron-jobs/usage-and-pricing).
+
+Preview deployments need separate staging scheduling or manual calls; never point a staging scheduler at production. The local curl example above can process jobs manually during setup.
 
 ## 5. Live acceptance checklist
 

@@ -33,6 +33,6 @@ There is an unavoidable external-request/checkpoint window: a process crash afte
 - Signup/email confirmation and login/logout are implemented. Password reset, MFA enrolment, invitation emails, self-service member removal and billing are not implemented. Administrators manage those account lifecycle needs in Supabase until extended.
 - Settings/BOQ changes save explicitly; no background autosave is used. Edit dialogs warn on discard/page exit. Final tender approval is item-level; there is no separate estimate freeze/signature or contractual approval workflow.
 - Archive rates instead of hard deletion. Projects have an Archived status. Retention/deletion policy, backups, alert routing, failed-job monitoring and scheduled pruning of old rate-limit rows need organisation-specific operating configuration.
-- The committed cron schedule requires minute-level scheduling. Verify plan limits and real invocation timing in staging. Preview environments need their own worker scheduling.
+- No cron schedule is enabled by default. Configure the authenticated Next.js AI worker with minute-level Vercel cron on a suitable plan or an external scheduler; otherwise AI jobs remain queued. Preview environments need their own worker scheduling.
 
 No production deployment is claimed. The application source is ready for infrastructure configuration and staging acceptance.

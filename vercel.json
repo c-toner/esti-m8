@@ -1,1 +1,6 @@
-{ "crons": [{ "path": "/api/cron/analysis", "schedule": "* * * * *" }] }
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build"
+}

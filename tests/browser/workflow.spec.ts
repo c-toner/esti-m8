@@ -286,6 +286,41 @@ test("sign in → project → upload PDF → calibrate → takeoff → rate → 
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.getByRole("button", { name: "Estimates", exact: true }).click();
   await page.getByRole("button", { name: "New estimate", exact: true }).click();
+  const estimateDialog = page.getByRole("dialog");
+  await expect(
+    estimateDialog.getByRole("button", { name: /^About / }),
+  ).toHaveCount(5);
+  const overheadHelp = page.getByRole("button", {
+    name: "About Overheads %",
+    exact: true,
+  });
+  await overheadHelp.hover();
+  await expect(page.getByRole("tooltip")).toContainText(
+    "10% of $10,000 adds $1,000",
+  );
+  await page
+    .getByRole("heading", { name: "Create estimate", exact: true })
+    .hover();
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
+  await overheadHelp.focus();
+  await expect(page.getByRole("tooltip")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
+  await expect(estimateDialog).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page
+    .getByRole("button", { name: "About Profit markup %", exact: true })
+    .click();
+  const tooltip = page.getByRole("tooltip");
+  await expect(tooltip).toContainText("Markup is not profit margin");
+  const bounds = await tooltip.boundingBox();
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
+  await page.screenshot({ path: "test-results/estimate-help-mobile.png" });
+  await page.getByLabel("Estimate name", { exact: true }).click();
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
+  await page.setViewportSize({ width: 1440, height: 1100 });
+
   await page
     .getByRole("dialog")
     .getByRole("button", { name: "Save", exact: true })

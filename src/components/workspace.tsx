@@ -121,43 +121,110 @@ const money = (n: number) =>
     n,
   );
 const projectFields: Field[] = [
-  { key: "name", label: "Project name", required: true },
-  { key: "client", label: "Client" },
-  { key: "location", label: "Location" },
-  { key: "region", label: "Region" },
-  { key: "tender_reference", label: "Tender reference" },
+  {
+    key: "name",
+    label: "Project name",
+    help: "A recognisable name for the job. Projects group drawings, takeoffs and estimates for the same work.",
+    required: true,
+  },
+  {
+    key: "client",
+    label: "Client",
+    help: "The customer or organisation you are preparing the estimate for.",
+  },
+  {
+    key: "location",
+    label: "Location",
+    help: "The site address or location where the work will be carried out.",
+  },
+  {
+    key: "region",
+    label: "Region",
+    help: "The area this project or rate relates to, such as NSW or Sydney. This reference does not automatically adjust prices.",
+  },
+  {
+    key: "tender_reference",
+    label: "Tender reference",
+    help: "The client\u2019s tender or job reference used to identify this project.",
+  },
   {
     key: "tender_closing_date",
     label: "Tender closing date",
+    help: "The date the tender is due. Leave blank if it has not been confirmed.",
     type: "date",
     nullable: true,
   },
   {
     key: "status",
     label: "Status",
+    help: "Track the project’s progress: Draft, In review, Tendered or Archived. This does not approve individual BOQ items.",
     options: ["Draft", "In review", "Tendered", "Archived"],
   },
-  { key: "description", label: "Description", type: "textarea" },
+  {
+    key: "description",
+    label: "Description",
+    help: "A brief description of the project scope and the work to be estimated.",
+    type: "textarea",
+  },
 ];
 const estimateFields: Field[] = [
-  { key: "name", label: "Estimate name", required: true },
-  { key: "overhead", label: "Overheads %", type: "number", required: true },
   {
-    key: "contingency",
-    label: "Contingency %",
+    key: "name",
+    label: "Estimate name",
+    help: "A name for this pricing version, such as Tender estimate or Revised scope. A project can have multiple estimates.",
+    required: true,
+  },
+  {
+    key: "overhead",
+    label: "Overheads %",
+    help: "An allowance for indirect costs such as supervision, administration and insurance. Applied to approved direct costs: 10% of $10,000 adds $1,000.",
     type: "number",
     required: true,
   },
-  { key: "markup", label: "Profit markup %", type: "number", required: true },
-  { key: "notes", label: "Assumptions and exclusions", type: "textarea" },
+  {
+    key: "contingency",
+    label: "Contingency %",
+    help: "An allowance for uncertainty or unexpected costs. Applied to approved direct costs, independently of overheads: 5% of $10,000 adds $500.",
+    type: "number",
+    required: true,
+  },
+  {
+    key: "markup",
+    label: "Profit markup %",
+    help: "Profit added to direct costs plus overheads and contingency. A 10% markup on $11,500 adds $1,150. Markup is not profit margin, which is profit as a percentage of the final price.",
+    type: "number",
+    required: true,
+  },
+  {
+    key: "notes",
+    label: "Assumptions and exclusions",
+    help: "Record what the price relies on and what is not included, such as ground conditions, working hours or disposal fees. These notes accompany the estimate.",
+    type: "textarea",
+  },
 ];
 const rateFields: Field[] = [
-  { key: "code", label: "Rate code", required: true },
-  { key: "description", label: "Description", required: true },
-  { key: "category", label: "Category", options: categories },
+  {
+    key: "code",
+    label: "Rate code",
+    help: "A unique reference for this library rate, such as PIPE-150. CSV imports use this code to match and update rates.",
+    required: true,
+  },
+  {
+    key: "description",
+    label: "Description",
+    help: "Describe what one unit of this rate includes, such as supply and installation of a specified pipe.",
+    required: true,
+  },
+  {
+    key: "category",
+    label: "Category",
+    help: "The type of work or cost this line belongs to. Categories help organise the BOQ and cost breakdown.",
+    options: categories,
+  },
   {
     key: "unit",
     label: "Unit",
+    help: "The basis for the quantity and price: m = metres, m2 = square metres, m3 = cubic metres, t = tonnes, kg = kilograms, ea = each, hr = hours and L = litres. Item or lot is a lump-sum amount. Day is a daily rate.",
     options: [
       "m",
       "m2",
@@ -172,32 +239,77 @@ const rateFields: Field[] = [
       "L",
     ],
   },
-  { key: "rate", label: "Unit rate AUD", type: "number", required: true },
-  { key: "supplier", label: "Supplier" },
-  { key: "region", label: "Region" },
+  {
+    key: "rate",
+    label: "Unit rate AUD",
+    help: "The cost of one unit in Australian dollars, excluding GST. Quantity × unit rate gives the line amount. Overheads, contingency and profit are added at estimate level.",
+    type: "number",
+    required: true,
+  },
+  {
+    key: "supplier",
+    label: "Supplier",
+    help: "The business or source that supplied this price, so it can be checked or refreshed later.",
+  },
+  {
+    key: "region",
+    label: "Region",
+    help: "The area this project or rate relates to, such as NSW or Sydney. This reference does not automatically adjust prices.",
+  },
   {
     key: "effective_date",
     label: "Effective date",
+    help: "The date this price applies from. Leave blank if unknown; this date does not automatically expire or update the rate.",
     type: "date",
     nullable: true,
   },
-  { key: "source", label: "Quote / source reference" },
-  { key: "notes", label: "Notes", type: "textarea" },
-  { key: "archived", label: "Archive this rate", type: "checkbox" },
+  {
+    key: "source",
+    label: "Quote / source reference",
+    help: "A quote number, document reference or other source that lets you trace where this price came from.",
+  },
+  {
+    key: "notes",
+    label: "Notes",
+    help: "Additional details, inclusions, exclusions or conditions relevant to using this rate.",
+    type: "textarea",
+  },
+  {
+    key: "archived",
+    label: "Archive this rate",
+    help: "Retire the rate from active use while keeping its history. Existing estimate prices keep their saved rate snapshots.",
+    type: "checkbox",
+  },
 ];
 const itemFields: Field[] = [
-  { key: "code", label: "Item code" },
-  { key: "description", label: "Description", required: true },
-  { key: "category", label: "Category", options: categories },
+  {
+    key: "code",
+    label: "Item code",
+    help: "An optional reference for this BOQ line, such as a bill item number or internal work code.",
+  },
+  {
+    key: "description",
+    label: "Description",
+    help: "Describe the work being priced, including relevant size, material, specification and inclusions.",
+    required: true,
+  },
+  {
+    key: "category",
+    label: "Category",
+    help: "The type of work or cost this line belongs to. Categories help organise the BOQ and cost breakdown.",
+    options: categories,
+  },
   {
     key: "quantity",
     label: "Quantity (blank if unknown)",
+    help: "The amount of work in the selected unit. Leave blank when unknown; an item needs a known quantity before it can be approved.",
     type: "number",
     nullable: true,
   },
   {
     key: "unit",
     label: "Unit",
+    help: "The basis for the quantity and price: m = metres, m2 = square metres, m3 = cubic metres, t = tonnes, kg = kilograms, ea = each, hr = hours and L = litres. Item or lot is a lump-sum amount. Day is a daily rate.",
     options: [
       "m",
       "m2",
@@ -212,14 +324,31 @@ const itemFields: Field[] = [
       "L",
     ],
   },
-  { key: "rate", label: "Unit rate AUD", type: "number", required: true },
-  { key: "evidence", label: "Source evidence", type: "textarea" },
+  {
+    key: "rate",
+    label: "Unit rate AUD",
+    help: "The cost of one unit in Australian dollars, excluding GST. Quantity × unit rate gives the line amount. Overheads, contingency and profit are added at estimate level.",
+    type: "number",
+    required: true,
+  },
+  {
+    key: "evidence",
+    label: "Source evidence",
+    help: "The drawing note, specification or other evidence supporting this item. Record enough detail for another estimator to check it.",
+    type: "textarea",
+  },
   {
     key: "method",
     label: "Calculation / measurement method",
+    help: "Explain how the quantity was obtained, for example length × width × depth, a drawing measurement or a manual allowance.",
     type: "textarea",
   },
-  { key: "notes", label: "Review notes", type: "textarea" },
+  {
+    key: "notes",
+    label: "Review notes",
+    help: "Record checks, unresolved questions or qualifications for this item. Editing the item returns it to draft and requires re-approval.",
+    type: "textarea",
+  },
 ];
 type Modal = {
   title: string;
@@ -419,6 +548,7 @@ export default function Workspace({ email }: { email: string }) {
         {
           key: "drawing_id",
           label: "Source drawing / revision",
+          help: "The exact uploaded drawing revision supporting this item. Select its page as well; leave both blank if there is no drawing reference.",
           nullable: true,
           options: [
             { value: "", label: "No drawing reference" },
@@ -433,6 +563,7 @@ export default function Workspace({ email }: { email: string }) {
         {
           key: "source_page",
           label: "Source page (1-based)",
+          help: "The page within the selected file, counting from 1. This is the PDF page position, which may differ from the printed drawing number.",
           type: "number",
           step: "1",
           nullable: true,

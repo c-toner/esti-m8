@@ -1,9 +1,11 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "./ui/button";
+import { FieldHelp } from "./field-help";
 export type Field = {
   key: string;
   label: string;
+  help: string;
   type?: "number" | "date" | "textarea" | "checkbox";
   options?: readonly (string | { value: string; label: string })[];
   required?: boolean;
@@ -25,6 +27,7 @@ export function EntityForm({
   onClose: () => void;
   busy: boolean;
 }) {
+  const formId = useId();
   const ref = useRef<HTMLDialogElement>(null);
   const [dirty, setDirty] = useState(false);
   useEffect(() => {
@@ -70,10 +73,20 @@ export function EntityForm({
         </header>
         <div className="form-grid">
           {fields.map((f) => (
-            <label key={f.key} className={f.type === "textarea" ? "wide" : ""}>
-              {f.label}
+            <div
+              key={f.key}
+              className={`form-field ${f.type === "textarea" ? "wide" : ""}`}
+            >
+              <div className="field-label-row">
+                <label htmlFor={`${formId}-${f.key}`}>{f.label}</label>
+                <FieldHelp id={`${formId}-${f.key}-help`} label={f.label}>
+                  {f.help}
+                </FieldHelp>
+              </div>
               {f.options ? (
                 <select
+                  id={`${formId}-${f.key}`}
+                  aria-describedby={`${formId}-${f.key}-help`}
                   name={f.key}
                   defaultValue={String(
                     initial[f.key] ??
@@ -93,18 +106,24 @@ export function EntityForm({
                 </select>
               ) : f.type === "textarea" ? (
                 <textarea
+                  id={`${formId}-${f.key}`}
+                  aria-describedby={`${formId}-${f.key}-help`}
                   name={f.key}
                   defaultValue={String(initial[f.key] ?? "")}
                   rows={3}
                 />
               ) : f.type === "checkbox" ? (
                 <input
+                  id={`${formId}-${f.key}`}
+                  aria-describedby={`${formId}-${f.key}-help`}
                   name={f.key}
                   type="checkbox"
                   defaultChecked={Boolean(initial[f.key])}
                 />
               ) : (
                 <input
+                  id={`${formId}-${f.key}`}
+                  aria-describedby={`${formId}-${f.key}-help`}
                   name={f.key}
                   type={f.type ?? "text"}
                   min={f.type === "number" ? 0 : undefined}
@@ -113,7 +132,7 @@ export function EntityForm({
                   defaultValue={String(initial[f.key] ?? "")}
                 />
               )}
-            </label>
+            </div>
           ))}
         </div>
         <footer>

@@ -638,3 +638,69 @@ label.toolbar {
   flex-direction: row;
   justify-content: flex-start;
 }
+
+.form-field {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.field-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.field-help {
+  display: inline-flex;
+}
+.field-help-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #526c73;
+  cursor: help;
+}
+.field-help-button:hover,
+.field-help-button:focus-visible {
+  background: #e5f3f0;
+  color: #175e59;
+}
+.field-help-button:focus-visible {
+  outline: 2px solid #175e59;
+  outline-offset: 2px;
+}
+.field-help-content {
+  position: absolute;
+  top: 26px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 12px 14px;
+  border: 1px solid #c4dad6;
+  border-radius: 8px;
+  background: #f1faf7;
+  color: #183e3a;
+  box-shadow: 0 6px 18px #183e3a20;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.form-field > input,
+.form-field > select,
+.form-field > textarea {
+  font-size: 14px;
+  font-weight: 400;
+  width: 100%;
+}
+.form-field > input[type="checkbox"] {
+  width: auto;
+  align-self: flex-start;
+}
